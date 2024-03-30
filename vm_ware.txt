@@ -1,0 +1,10 @@
+sudo apt-get update
+sudo apt-get install open-vm-tools
+sudo vmware-config-tools.pl
+df -kh
+vmware-hgfsclient
+sudo su
+gedit /etc/fstab
+vmhgfs-fuse   /mnt/hgfs    fuse    defaults,allow_other    0    0
+mkdir /mnt/hgfs or sudo mkdir -p /mnt/hgfs/
+mount -a
