@@ -1,0 +1,28 @@
+int i;
+  for(i = 0; i < 4; i++)
+		ioctl(leds_fd, OFF, i);
+  int led_no = 0;
+  while (1){
+    ioctl(leds_fd, ON, led_no);
+		sleep(1);
+		led_no++;
+		if(led_no == 4){
+      led_no = 0;
+      for(i = 0; i < 4; i++)
+		    ioctl(leds_fd, OFF, i);
+    }
+  }
+
+int i;
+  
+  while (1){
+    for(i = 0; i < 4; i++){
+      ioctl(leds_fd, ON, i);
+      usleep(500000);
+    }
+      
+    ioctl(leds_fd, OFF, 0);
+    ioctl(leds_fd, OFF, 1);
+    ioctl(leds_fd, OFF, 2);
+    ioctl(leds_fd, OFF, 3);
+  }

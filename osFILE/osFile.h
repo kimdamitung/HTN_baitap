@@ -18,5 +18,10 @@ int sum_number_lower(FILE *pFile, const char *filename);
 int check_text_lower_in_file(FILE *pFile, const char *filename);
 void convert_lower_to_upper(FILE *pFile, const char *filename);
 void add_char_end_line(FILE *pFile, const char *filename, char text[256]);
+/*begin code 0*/
+void upper_first_text(FILE *pFile, const char *filename);
+void lower_first_text(FILE *pFile, const char *filename);
+void append_char_position(FILE *pFile, const char *filename, int position, const char *text);
+/*end code 0*/
 
 #endif
