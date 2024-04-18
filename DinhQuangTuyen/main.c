@@ -12,8 +12,7 @@ int main(){
 			ch = _getch();
 			/*bai cua thang quang gui*/
 			if(ch == '1'){
-				const char *text = "bbbbbbbbbb";
-				add_char_in_file(pFile, "quang.txt", text);
+				add_char_in_file(pFile, "quang.txt", "bbbbbbbbbb");
 			}else if(ch == '2'){
 				display_file(pFile, "quang.txt");
 			}else if(ch == '3'){
@@ -22,8 +21,7 @@ int main(){
 			}
 			/*bai cua thang an gui*/
 			if(ch == '4'){
-				const char *text = "aaaaaaaaaa";
-				add_char_in_file(pFile, "an.txt", text);
+				add_char_in_file(pFile, "an.txt", "aaaaaaaaaa");
 			}else if(ch == '5'){
 				display_file(pFile, "an.txt");
 			}else if(ch == '6'){

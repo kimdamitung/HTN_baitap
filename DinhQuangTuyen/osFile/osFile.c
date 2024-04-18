@@ -24,3 +24,4 @@ void add_char_end_line(FILE *pFile, const char *filename, const char *text){
 		fprintf(pFile, "%s\n", text);
 	fclose(pFile);
 }
+
