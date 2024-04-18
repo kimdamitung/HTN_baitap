@@ -18,6 +18,9 @@ Nhấn/nhả K3 chương trình sẽ phát ra n tiếng ở tần số  1000Hz (
 #include <sys/select.h>
 #include <sys/time.h>
 #include <errno.h>
+#include <linux/fs.h>
+#include <string.h>
+#include <pthread.h>
 
 #define ON  				1
 #define OFF 				0
@@ -27,11 +30,14 @@ Nhấn/nhả K3 chương trình sẽ phát ra n tiếng ở tần số  1000Hz (
 void add_char_in_file(FILE *pFile, const char *filename, const char *text);
 void display_file(FILE *pFile, const char *filename);
 int state_led(int n);
+void *led_polling(void *param);
+
+static int n;
+int button_fd, led_fd, pwm_fd;
 
 int main(int argc, char const *argv[])
 {
 	/* code */
-	int button_fd, led_fd, pwm_fd;
 	char buttons[3] = {'0', '0', '0'};
 	FILE *pFile;
 	button_fd = open("/dev/buttons", 0);
@@ -50,6 +56,8 @@ int main(int argc, char const *argv[])
 	for(m = 0; m < 4; m++)
 		ioctl(led_fd, OFF, m);
 	int n;
+	const char *thread_parms;
+	pthread_t thread_id;
 	/*end code 1*/
 	add_char_in_file(pFile, "test.txt", "aaaaaaaaaa");
 	while(1){
@@ -80,30 +88,14 @@ int main(int argc, char const *argv[])
 						printf("Nhap n: ");
 						scanf("%d", &n);
 						int j;
+						thread_id = pthread_create(&thread_id, NULL, &led_polling, (void*)thread_parms);
 						for(j = 0; j < n; j++){
 							ioctl(pwm_fd, PWM_IOCTL_SET_FREQ, 1000);
 							usleep(500000);
 							ioctl(pwm_fd, PWM_IOCTL_STOP);
 							usleep(500000);
 						}
-						if(n == 5){
-							ioctl(led_fd, ON, 0);
-							ioctl(led_fd, ON, 1);
-							ioctl(led_fd, ON, 2);
-							ioctl(led_fd, ON, 3);
-							usleep(500000);
-							ioctl(led_fd, OFF, 0);
-							ioctl(led_fd, OFF, 1);
-							ioctl(led_fd, OFF, 2);
-							ioctl(led_fd, OFF, 3);
-							usleep(500000);
-						}else{
-							int state = state_led(n);
-							ioctl(led_fd, (state & 0x01) == 1 ? ON:OFF, 0);
-							ioctl(led_fd, (state & 0x03) == 3 ? ON:OFF, 1);
-							ioctl(led_fd, (state & 0x07) == 7 ? ON:OFF, 2);
-							ioctl(led_fd, (state & 0x0F) == 15 ? ON:OFF, 3);
-						}
+						
 					}while(n < 1 || n > 5);
 				}
 				count_of_changed_key++;
@@ -145,4 +137,27 @@ int state_led(int n){
 		return 7;
 	else if(n == 4)
 		return 15;
+}
+
+void *led_polling(void *param){
+	for(;;){
+		if(n == 5){
+			ioctl(led_fd, ON, 0);
+			ioctl(led_fd, ON, 1);
+			ioctl(led_fd, ON, 2);
+			ioctl(led_fd, ON, 3);
+			usleep(500000);
+			ioctl(led_fd, OFF, 0);
+			ioctl(led_fd, OFF, 1);
+			ioctl(led_fd, OFF, 2);
+			ioctl(led_fd, OFF, 3);
+			usleep(500000);
+		}else{
+			int state = state_led(n);
+			ioctl(led_fd, (state & 0x01) == 1 ? ON:OFF, 0);
+			ioctl(led_fd, (state & 0x03) == 3 ? ON:OFF, 1);
+			ioctl(led_fd, (state & 0x07) == 7 ? ON:OFF, 2);
+			ioctl(led_fd, (state & 0x0F) == 15 ? ON:OFF, 3);
+		}
+	}
 }
