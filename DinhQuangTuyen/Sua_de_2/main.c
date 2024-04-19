@@ -135,9 +135,9 @@ void add_char_end_line(FILE *pFile, const char *filename, const char *text){
 
 void *led_polling(void *param){
 	for(;;){
-		ioctl(led_fd, n & 0x01, 0);
-  		ioctl(led_fd, n & 0x02, 1);
-  		ioctl(led_fd, n & 0x04, 2);
-  		ioctl(led_fd, n & 0x08, 3);
+		ioctl(led_fd, n & 0x01 ? ON:OFF, 0);
+  		ioctl(led_fd, n & 0x02 ? ON:OFF, 1);
+  		ioctl(led_fd, n & 0x04 ? ON:OFF, 2);
+  		ioctl(led_fd, n & 0x08 ? ON:OFF, 3);
 	}
 }
